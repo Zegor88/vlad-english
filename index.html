@@ -158,9 +158,14 @@
 
     <div id="view-log" role="tabpanel" aria-labelledby="tab-log" hidden>
       <section>
-        <p class="section-label">Что уже сделано</p>
+        <p class="section-label">Разбор занятий</p>
         <ul class="log" id="log-list"></ul>
-        <p class="empty" id="log-empty" hidden>Пока пусто. Пройденные занятия появятся здесь — вместе с разбором.</p>
+      </section>
+
+      <section>
+        <p class="section-label">Мои отметки с этого iPad</p>
+        <ul class="log" id="log-marks"></ul>
+        <p class="empty" id="log-empty" hidden>Здесь появятся оценки сложности, которые ты поставишь под заданиями. Пройденные занятия с разбором выше видны всегда.</p>
       </section>
     </div>
 
@@ -200,6 +205,25 @@
     var LABELS = { 1: 'очень легко', 2: 'легко', 3: 'средне', 4: 'трудно', 5: 'очень трудно' };
     var KEY = 'vlad-english-ratings-v1';
 
+    // Разбор занятий ведёт преподаватель и фиксирует в этом списке.
+    // Новые записи добавляются сверху. Оценки сложности здесь — со слов Влада.
+    var HISTORY = [
+      {
+        when: '13 сентября 2026',
+        title: 'What are you doing today? · Cambridge A1',
+        score: 1,
+        verdict: 'слишком легко',
+        text: 'Оказалось ниже его уровня: ни одной ошибки и никакого напряжения. Полезно только как проверка, что формат «слушаю и выбираю» ему понятен. Уровень A1 больше не берём — переходим на A2.'
+      },
+      {
+        when: '13 сентября 2026',
+        title: 'A dog’s life · British Council, история с видео',
+        score: 3,
+        verdict: 'легко, но формат понравился',
+        text: 'Сложность была только в запоминании деталей, ошибок не сделал. Главный результат — не в задании, а в разговоре после него: он сам построил полный ответ («I think the most important thing to stay safe in the road is to watch in them»), добавил причину через because и поправил себя по ходу речи. Это и есть его рабочая зона — говорить целыми фразами, а не узнавать слова. История с видео плюс обсуждение остаётся основным форматом.'
+      }
+    ];
+
     function load() {
       try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
     }
@@ -207,35 +231,70 @@
       try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
     }
 
-    function renderLog() {
-      var data = load();
-      var list = document.getElementById('log-list');
-      var empty = document.getElementById('log-empty');
-      var keys = Object.keys(data).filter(function (k) { return data[k] && data[k].length; });
-      list.innerHTML = '';
-      if (!keys.length) { empty.hidden = false; return; }
-      empty.hidden = true;
-      var items = [];
-      keys.forEach(function (k) {
-        data[k].forEach(function (entry) { items.push({ task: k, entry: entry }); });
-      });
-      items.sort(function (a, b) { return (b.entry.at || '').localeCompare(a.entry.at || ''); });
-      items.forEach(function (it) {
-        var li = document.createElement('li');
-        var when = document.createElement('p');
-        when.className = 'log-when';
-        when.textContent = it.entry.at ? new Date(it.entry.at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) : 'дата не записана';
-        var h = document.createElement('h3');
-        h.textContent = TASK_NAMES[it.task] || it.task;
+    function makeCard(when, title, badgeText, bodyText, analysis) {
+      var li = document.createElement('li');
+      var w = document.createElement('p');
+      w.className = 'log-when';
+      w.textContent = when;
+      var h = document.createElement('h3');
+      h.textContent = title;
+      li.appendChild(w);
+      li.appendChild(h);
+      if (badgeText) {
         var badge = document.createElement('span');
         badge.className = 'rating';
-        badge.textContent = 'Сложность: ' + it.entry.score + '/5 — ' + (LABELS[it.entry.score] || '');
-        var p = document.createElement('p');
-        p.textContent = it.entry.note || 'Без комментария.';
-        li.appendChild(when); li.appendChild(h); li.appendChild(badge); li.appendChild(p);
-        list.appendChild(li);
+        badge.textContent = badgeText;
+        li.appendChild(badge);
+      }
+      var p = document.createElement('p');
+      p.textContent = bodyText;
+      li.appendChild(p);
+      if (analysis) {
+        var box = document.createElement('div');
+        box.className = 'analysis';
+        var lbl = document.createElement('b');
+        lbl.textContent = 'Разбор';
+        box.appendChild(lbl);
+        box.appendChild(document.createTextNode(analysis));
+        li.appendChild(box);
+      }
+      return li;
+    }
+
+    function renderHistory() {
+      var list = document.getElementById('log-list');
+      list.innerHTML = '';
+      HISTORY.forEach(function (item) {
+        var badge = item.score
+          ? 'Сложность ' + item.score + '/10' + (item.verdict ? ' — ' + item.verdict : '')
+          : (item.verdict || '');
+        list.appendChild(makeCard(item.when, item.title, badge, item.summary || '', item.text));
       });
     }
+
+    function renderMarks() {
+      var data = load();
+      var list = document.getElementById('log-marks');
+      var empty = document.getElementById('log-empty');
+      var items = [];
+      Object.keys(data).forEach(function (k) {
+        (data[k] || []).forEach(function (e) { items.push({ task: k, entry: e }); });
+      });
+      items.sort(function (a, b) { return (b.entry.at || '').localeCompare(a.entry.at || ''); });
+      list.innerHTML = '';
+      if (!items.length) { empty.hidden = false; return; }
+      empty.hidden = true;
+      items.forEach(function (it) {
+        var when = it.entry.at
+          ? new Date(it.entry.at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : 'дата не записана';
+        var badge = 'Сложность ' + it.entry.score + '/5 — ' + (LABELS[it.entry.score] || '');
+        list.appendChild(makeCard(when, TASK_NAMES[it.task] || it.task, badge,
+          it.entry.note || 'Без комментария.'));
+      });
+    }
+
+    function renderLog() { renderHistory(); renderMarks(); }
 
     document.querySelectorAll('.lesson').forEach(function (card) {
       var task = card.getAttribute('data-task');
