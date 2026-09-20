@@ -50,6 +50,7 @@
         {
           "id": "say-it",
           "type": "choice",
+          "acceptAny": true,
           "prompt": "Say this aloud: “I would like to be a … because … .” Then choose the honest answer.",
           "options": ["I said it", "I want to try it with an adult", "Not today"],
           "answers": [0, 1, 2],

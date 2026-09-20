@@ -198,7 +198,7 @@
             </div>
           </form>
           <p class="quiz-status" id="quiz-status" aria-live="polite" hidden></p>
-          <p class="quiz-note">Ответы сохраняются только в Safari на этом iPad. На GitHub они не отправляются.</p>
+          <p class="quiz-note">После проверки выборы остаются в Safari на этом iPad и сохраняются в семейной истории. На GitHub они не отправляются.</p>
         </article>
       </section>
 
@@ -234,7 +234,7 @@
 
     <p class="closing">Если сегодня не хочется — это тоже нормальный день. Страница никуда не денется.</p>
 
-    <footer>Задания взяты у British Council и Cambridge. Эта страница только ведёт к ним, ответы ты даёшь там. Отметки сохраняются только на этом iPad.</footer>
+    <footer>Задания взяты у British Council и Cambridge. Эта страница только ведёт к ним, ответы ты даёшь там. Ответы мини-викторины не попадают в GitHub: они сохраняются на iPad и в семейной истории.</footer>
     <noscript><p class="empty">Отметки и разбор работают при включённом JavaScript.</p></noscript>
   </main>
 
@@ -414,6 +414,9 @@
       a = answerArray(a); b = answerArray(b);
       return a.length === b.length && a.every(function (v, n) { return v === b[n]; });
     }
+    function isQuestionCorrect(item, picked) {
+      return item.acceptAny ? picked.length > 0 : sameAnswers(picked, item.answers);
+    }
     function selectedAnswers(n) {
       return Array.prototype.slice.call(document.querySelectorAll('input[name="quiz-' + n + '"]:checked'))
         .map(function (input) { return Number(input.value); }).sort(function (a, b) { return a - b; });
@@ -466,10 +469,10 @@
         if (!group) return;
         group.querySelectorAll('.quiz-option').forEach(function (label, optionIndex) {
           label.classList.remove('correct', 'wrong');
-          if (item.answers.indexOf(optionIndex) !== -1) label.classList.add('correct');
-          else if (picked.indexOf(optionIndex) !== -1) label.classList.add('wrong');
+          if (!item.acceptAny && item.answers.indexOf(optionIndex) !== -1) label.classList.add('correct');
+          else if (!item.acceptAny && picked.indexOf(optionIndex) !== -1) label.classList.add('wrong');
         });
-        if (sameAnswers(picked, item.answers)) right++;
+        if (isQuestionCorrect(item, picked)) right++;
       });
       var status = document.getElementById('quiz-status');
       status.hidden = false;
@@ -493,7 +496,7 @@
       var answers = QUIZ.items.map(function (item, n) {
         var selected = answerArray(data.answers && data.answers[n]);
         if (!selected.length) return null;
-        return { questionId: item.id, choice: selected, correct: sameAnswers(selected, item.answers) };
+        return { questionId: item.id, choice: selected, correct: isQuestionCorrect(item, selected) };
       }).filter(Boolean);
       if (!answers.length) return false;
       var response = await fetch(api.replace(/\/$/, '') + '/v1/answers', {
