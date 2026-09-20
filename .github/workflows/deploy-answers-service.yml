@@ -16,4 +16,10 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           wranglerVersion: '4.131.1'
           workingDirectory: answers-worker
-          command: d1 execute vlad_english_answers --remote --file=schema.sql && wrangler deploy
+          command: d1 execute vlad_english_answers --remote --file=schema.sql
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: '4.131.1'
+          workingDirectory: answers-worker
+          command: deploy
