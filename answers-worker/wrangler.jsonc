@@ -3,6 +3,7 @@
   "name": "vlad-english-answers",
   "main": "src/index.js",
   "compatibility_date": "2026-09-18",
+  "account_id": "a5bf49208c9e42d52a0aab619cf2ef49",
   "vars": {
     "ALLOWED_ORIGIN": "https://zegor88.github.io"
   },
