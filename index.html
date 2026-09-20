@@ -238,6 +238,7 @@
     <noscript><p class="empty">Отметки и разбор работают при включённом JavaScript.</p></noscript>
   </main>
 
+  <script src="answers-config.js"></script>
   <script>
     var STATES = [
       { id:'done',    label:'сделал' },
@@ -252,13 +253,8 @@
     var KEY = 'vlad-english-state-v2';
     var QUIZ_KEY = 'vlad-english-jobs-quiz-v1';
     var storageBroken = false;
-    var QUIZ = [
-      { q:'I want to work with animals. I want to be a …', options:['vet','teacher','pilot'], answer:0 },
-      { q:'A vet looks after …', options:['animals','books','cars'], answer:0 },
-      { q:'My aunt works at a school. She is a …', options:['teacher','farmer','singer'], answer:0 },
-      { q:'I would like to be a vet … I love animals.', options:['because','but','or'], answer:0 },
-      { q:'When I grow up, I would like to … with animals.', options:['work','works','working'], answer:0 }
-    ];
+    var QUIZ = null;
+    var QUIZ_BANK = null;
 
     function load() {
       try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
@@ -401,82 +397,141 @@
       syncTask(task);
     });
 
+    function quizKey() { return 'vlad-english-quiz-' + (QUIZ ? QUIZ.id : 'pending') + '-v1'; }
     function quizLoad() {
-      try { return JSON.parse(localStorage.getItem(QUIZ_KEY) || '{}') || {}; }
+      try { return JSON.parse(localStorage.getItem(quizKey()) || '{}') || {}; }
       catch (e) { storageBroken = true; return {}; }
     }
     function quizSave(data) {
-      try { localStorage.setItem(QUIZ_KEY, JSON.stringify(data)); return true; }
+      try { localStorage.setItem(quizKey(), JSON.stringify(data)); return true; }
       catch (e) { storageBroken = true; return false; }
     }
+    function answerArray(value) {
+      if (Array.isArray(value)) return value.map(Number).sort(function (a, b) { return a - b; });
+      return value === undefined || value === null ? [] : [Number(value)];
+    }
+    function sameAnswers(a, b) {
+      a = answerArray(a); b = answerArray(b);
+      return a.length === b.length && a.every(function (v, n) { return v === b[n]; });
+    }
+    function selectedAnswers(n) {
+      return Array.prototype.slice.call(document.querySelectorAll('input[name="quiz-' + n + '"]:checked'))
+        .map(function (input) { return Number(input.value); }).sort(function (a, b) { return a - b; });
+    }
     function renderQuiz() {
+      if (!QUIZ) return;
       var saved = quizLoad();
+      document.getElementById('quiz-title').textContent = QUIZ.title;
+      document.querySelector('#quiz-title + .quiz-intro').textContent = QUIZ.level + '. ' + QUIZ.purpose;
       var host = document.getElementById('quiz-items');
       host.innerHTML = '';
-      QUIZ.forEach(function (item, n) {
+      QUIZ.items.forEach(function (item, n) {
         var itemEl = document.createElement('div');
         itemEl.className = 'quiz-item';
+        itemEl.setAttribute('data-quiz-question', String(n));
         var q = document.createElement('p');
         q.className = 'quiz-question';
-        q.textContent = (n + 1) + '. ' + item.q;
+        q.textContent = (n + 1) + '. ' + item.prompt;
         var options = document.createElement('div');
         options.className = 'quiz-options';
         item.options.forEach(function (text, optionIndex) {
           var label = document.createElement('label');
           label.className = 'quiz-option';
           var input = document.createElement('input');
-          input.type = 'radio'; input.name = 'quiz-' + n; input.value = String(optionIndex);
-          input.checked = saved.answers && saved.answers[n] === optionIndex;
+          input.type = item.type === 'multiple' ? 'checkbox' : 'radio';
+          input.name = 'quiz-' + n; input.value = String(optionIndex);
+          input.checked = answerArray(saved.answers && saved.answers[n]).indexOf(optionIndex) !== -1;
           input.addEventListener('change', function () {
             var draft = quizLoad();
             draft.answers = draft.answers || {};
-            draft.answers[n] = optionIndex;
+            draft.answers[n] = selectedAnswers(n);
             delete draft.checkedAt;
             quizSave(draft);
             document.getElementById('quiz-status').hidden = true;
-            document.querySelectorAll('[data-quiz-question="' + n + '"] .quiz-option').forEach(function (x) { x.classList.remove('correct', 'wrong'); });
+            itemEl.querySelectorAll('.quiz-option').forEach(function (x) { x.classList.remove('correct', 'wrong'); });
           });
           label.appendChild(input);
           label.appendChild(document.createTextNode(text));
           options.appendChild(label);
         });
-        itemEl.setAttribute('data-quiz-question', String(n));
         itemEl.appendChild(q); itemEl.appendChild(options); host.appendChild(itemEl);
       });
-      if (saved.checkedAt) showQuizResult(saved);
+      if (saved.checkedAt) showQuizResult(saved, 'Результат сохранён на этом iPad.');
     }
-    function showQuizResult(data) {
+    function showQuizResult(data, suffix) {
       var right = 0;
-      QUIZ.forEach(function (item, n) {
-        var picked = data.answers && data.answers[n];
+      QUIZ.items.forEach(function (item, n) {
+        var picked = answerArray(data.answers && data.answers[n]);
         var group = document.querySelector('[data-quiz-question="' + n + '"]');
         if (!group) return;
         group.querySelectorAll('.quiz-option').forEach(function (label, optionIndex) {
           label.classList.remove('correct', 'wrong');
-          if (optionIndex === item.answer) label.classList.add('correct');
-          else if (picked === optionIndex) label.classList.add('wrong');
+          if (item.answers.indexOf(optionIndex) !== -1) label.classList.add('correct');
+          else if (picked.indexOf(optionIndex) !== -1) label.classList.add('wrong');
         });
-        if (picked === item.answer) right++;
+        if (sameAnswers(picked, item.answers)) right++;
       });
       var status = document.getElementById('quiz-status');
       status.hidden = false;
-      status.textContent = right + ' из ' + QUIZ.length + '. ' + (right === QUIZ.length ? 'Отлично: фразы про jobs уже уверенно получаются.' : 'Посмотри зелёные варианты и попробуй сказать две фразы вслух. Можно вернуться к этому позже.');
+      status.textContent = right + ' из ' + QUIZ.items.length + '. ' +
+        (right === QUIZ.items.length ? 'Отлично: можно переходить к следующей теме.' : 'Посмотри зелёные варианты и выбери одну фразу, которую скажешь вслух.') +
+        (suffix ? ' ' + suffix : '');
+    }
+    function deviceToken() {
+      var key = 'vlad-english-answer-device-v1';
+      try {
+        var existing = localStorage.getItem(key);
+        if (/^[a-f0-9]{64}$/.test(existing || '')) return existing;
+        var bytes = new Uint8Array(32); crypto.getRandomValues(bytes);
+        var created = Array.prototype.map.call(bytes, function (n) { return n.toString(16).padStart(2, '0'); }).join('');
+        localStorage.setItem(key, created); return created;
+      } catch (e) { return null; }
+    }
+    async function saveToFamilyRecord(data) {
+      var api = window.ENGLISH_ANSWER_API || '';
+      if (!api || !QUIZ) return false;
+      var answers = QUIZ.items.map(function (item, n) {
+        var selected = answerArray(data.answers && data.answers[n]);
+        if (!selected.length) return null;
+        return { questionId: item.id, choice: selected, correct: sameAnswers(selected, item.answers) };
+      }).filter(Boolean);
+      if (!answers.length) return false;
+      var response = await fetch(api.replace(/\/$/, '') + '/v1/answers', {
+        method: 'POST', mode: 'cors', headers: {
+          'Content-Type': 'application/json', 'X-Device-Token': deviceToken()
+        }, body: JSON.stringify({ quizId: QUIZ.id, answers: answers })
+      });
+      if (!response.ok) throw new Error('answer service returned ' + response.status);
+      return true;
     }
     document.getElementById('jobs-quiz').addEventListener('submit', function (e) {
       e.preventDefault();
+      if (!QUIZ) return;
       var data = quizLoad(); data.answers = data.answers || {};
-      QUIZ.forEach(function (item, n) {
-        var selected = document.querySelector('input[name="quiz-' + n + '"]:checked');
-        if (selected) data.answers[n] = Number(selected.value);
+      QUIZ.items.forEach(function (item, n) { data.answers[n] = selectedAnswers(n); });
+      data.checkedAt = new Date().toISOString(); quizSave(data); showQuizResult(data, 'Результат сохранён на этом iPad.');
+      saveToFamilyRecord(data).then(function (saved) {
+        if (saved) showQuizResult(data, 'Сохранено на iPad и в семейной истории.');
+      }).catch(function () {
+        showQuizResult(data, 'На iPad сохранено. В семейную историю сейчас не отправилось — можно повторить позже.');
       });
-      data.checkedAt = new Date().toISOString();
-      quizSave(data); showQuizResult(data);
     });
     document.getElementById('quiz-reset').addEventListener('click', function () {
-      try { localStorage.removeItem(QUIZ_KEY); } catch (e) { storageBroken = true; }
+      try { localStorage.removeItem(quizKey()); } catch (e) { storageBroken = true; }
       document.getElementById('quiz-status').hidden = true;
       renderQuiz();
     });
+    fetch('quiz-bank.json', { cache:'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then(function (bank) {
+        QUIZ_BANK = bank;
+        QUIZ = (bank.quizzes || []).filter(function (quiz) { return quiz.id === bank.currentQuizId; })[0] || null;
+        if (!QUIZ) throw new Error('current quiz is missing');
+        renderQuiz();
+      })
+      .catch(function () {
+        document.getElementById('quiz-items').textContent = 'Викторина пока не загрузилась. Можно открыть одно из заданий выше.';
+      });
 
     // Разбор занятий живёт в review.json: правка файла не требует трогать страницу.
     fetch('review.json', { cache:'no-store' })

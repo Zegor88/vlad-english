@@ -1,0 +1,93 @@
+{
+  "currentQuizId": "jobs-animals-001",
+  "quizzes": [
+    {
+      "id": "jobs-animals-001",
+      "title": "Jobs & animals",
+      "level": "A2 · 10–12 минут",
+      "purpose": "Понять смысл фразы, выбрать точную форму и сказать одну мысль о себе.",
+      "items": [
+        {
+          "id": "meaning-vet",
+          "type": "choice",
+          "prompt": "My uncle helps sick dogs and cats. He is a …",
+          "options": ["vet", "teacher", "pilot"],
+          "answers": [0],
+          "feedback": "A vet helps animals when they are ill."
+        },
+        {
+          "id": "reason-because",
+          "type": "choice",
+          "prompt": "Choose the sentence that gives a reason.",
+          "options": ["I would like to be a vet because I love animals.", "I would like to be a vet yesterday.", "I would like be a vet because animals."],
+          "answers": [0],
+          "feedback": "After because we give the reason: I love animals."
+        },
+        {
+          "id": "animal-jobs",
+          "type": "multiple",
+          "prompt": "Choose TWO jobs that can work with animals.",
+          "options": ["vet", "animal keeper", "baker", "bus driver"],
+          "answers": [0, 1],
+          "feedback": "Both a vet and an animal keeper can work with animals."
+        },
+        {
+          "id": "future-order",
+          "type": "choice",
+          "prompt": "Which sentence sounds natural?",
+          "options": ["When I grow up, I would like to work with animals.", "When I grow up, I would like work with animals.", "When I grow up, I like would to work animals."],
+          "answers": [0],
+          "feedback": "We say would like to + verb: would like to work."
+        },
+        {
+          "id": "family-jobs",
+          "type": "choice",
+          "prompt": "Which question could you ask about someone’s job?",
+          "options": ["What does your mum do?", "What your mum does yesterday?", "Where your mum job?"],
+          "answers": [0],
+          "feedback": "What does … do? is a useful question about work."
+        },
+        {
+          "id": "say-it",
+          "type": "choice",
+          "prompt": "Say this aloud: “I would like to be a … because … .” Then choose the honest answer.",
+          "options": ["I said it", "I want to try it with an adult", "Not today"],
+          "answers": [0, 1, 2],
+          "feedback": "Any honest answer is fine. The aim is one real sentence, not a perfect performance."
+        }
+      ]
+    },
+    {
+      "id": "free-time-002",
+      "title": "Free time & places",
+      "level": "A2 · следующий набор",
+      "purpose": "После Cambridge A2: уточнять место, время и причину выбора.",
+      "items": [
+        {
+          "id": "place-meaning",
+          "type": "choice",
+          "prompt": "I’m going to the sports centre after school. What will I probably do?",
+          "options": ["play sport", "go to sleep", "cook dinner"],
+          "answers": [0],
+          "feedback": "A sports centre is a place for sport and exercise."
+        },
+        {
+          "id": "free-time-reason",
+          "type": "choice",
+          "prompt": "Choose the best ending: “I like going to the park because …”",
+          "options": ["I can meet my friends there.", "I went there tomorrow.", "the park is going."],
+          "answers": [0],
+          "feedback": "A because-clause explains why you like something."
+        },
+        {
+          "id": "say-place",
+          "type": "choice",
+          "prompt": "Say one true sentence about where you go after school. Then choose the honest answer.",
+          "options": ["I said it", "I want a model from an adult", "Not today"],
+          "answers": [0, 1, 2],
+          "feedback": "Any honest answer is fine."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vlad-english-answers",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-18",
+  "vars": {
+    "ALLOWED_ORIGIN": "https://zegor88.github.io"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vlad_english_answers",
+      "database_id": "REPLACE_AFTER_D1_CREATE"
+    }
+  ]
+}
