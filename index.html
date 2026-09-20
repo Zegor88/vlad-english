@@ -65,6 +65,20 @@
     .mark-note button { min-height:44px; margin:0 0 0 6px; padding:8px 12px; border:1px solid var(--line); border-radius:9px; background:var(--card); color:var(--accent); font:600 .86rem/1.2 ui-rounded,system-ui,-apple-system,sans-serif; cursor:pointer; }
 
     .speak { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:0 1px 2px rgba(31,42,36,.05); }
+    .quiz { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:0 1px 2px rgba(31,42,36,.05); }
+    .quiz-intro { margin:0 0 18px; max-width:56ch; }
+    .quiz-item { padding:16px 0; border-top:1px solid var(--line); }
+    .quiz-item:first-of-type { border-top:0; padding-top:0; }
+    .quiz-question { margin:0 0 10px; font:700 1rem/1.35 ui-rounded,system-ui,-apple-system,sans-serif; }
+    .quiz-options { display:grid; gap:8px; }
+    .quiz-option { display:flex; align-items:flex-start; gap:10px; min-height:46px; padding:11px 12px; border:1px solid var(--line); border-radius:10px; background:var(--card); cursor:pointer; font:600 .96rem/1.3 ui-rounded,system-ui,-apple-system,sans-serif; }
+    .quiz-option:hover { border-color:var(--accent); background:var(--accent-soft); }
+    .quiz-option input { width:19px; height:19px; margin:1px 0 0; accent-color:var(--accent); flex:0 0 auto; }
+    .quiz-option.correct { border-color:var(--accent); background:var(--accent-soft); }
+    .quiz-option.wrong { border-color:#a84444; background:#fff1f0; }
+    .quiz-actions { display:grid; grid-template-columns:1fr; gap:9px; margin-top:18px; }
+    .quiz-status { margin:12px 0 0; padding:12px 14px; border-radius:10px; background:var(--sun-soft); color:var(--ink); font:600 .93rem/1.4 ui-rounded,system-ui,-apple-system,sans-serif; }
+    .quiz-note { margin:10px 0 0; color:var(--muted); font-size:.9rem; }
     .speak-question { margin:0; font-size:1.35rem; line-height:1.3; letter-spacing:-.015em; }
     .speak-hint { margin:14px 0 0; max-width:56ch; font-size:1rem; }
     .speak-hint b { font-weight:700; }
@@ -172,6 +186,23 @@
       </section>
 
       <section>
+        <p class="section-label">Мини-викторина</p>
+        <article class="quiz" aria-labelledby="quiz-title">
+          <h2 id="quiz-title">Jobs & animals</h2>
+          <p class="quiz-intro">Пять собственных вопросов для тренировки после истории про профессии и животных. Это не задания British Council и не их игровой тест.</p>
+          <form id="jobs-quiz">
+            <div id="quiz-items"></div>
+            <div class="quiz-actions">
+              <button class="next" type="submit" id="quiz-check">Проверить и сохранить на iPad</button>
+              <button class="log-undo" type="button" id="quiz-reset">Начать заново</button>
+            </div>
+          </form>
+          <p class="quiz-status" id="quiz-status" aria-live="polite" hidden></p>
+          <p class="quiz-note">Ответы сохраняются только в Safari на этом iPad. На GitHub они не отправляются.</p>
+        </article>
+      </section>
+
+      <section>
         <p class="section-label">Разговор вслух</p>
 
         <article class="speak">
@@ -219,7 +250,15 @@
       'our-best-things': 'Our best things'
     };
     var KEY = 'vlad-english-state-v2';
+    var QUIZ_KEY = 'vlad-english-jobs-quiz-v1';
     var storageBroken = false;
+    var QUIZ = [
+      { q:'I want to work with animals. I want to be a …', options:['vet','teacher','pilot'], answer:0 },
+      { q:'A vet looks after …', options:['animals','books','cars'], answer:0 },
+      { q:'My aunt works at a school. She is a …', options:['teacher','farmer','singer'], answer:0 },
+      { q:'I would like to be a vet … I love animals.', options:['because','but','or'], answer:0 },
+      { q:'When I grow up, I would like to … with animals.', options:['work','works','working'], answer:0 }
+    ];
 
     function load() {
       try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
@@ -362,6 +401,83 @@
       syncTask(task);
     });
 
+    function quizLoad() {
+      try { return JSON.parse(localStorage.getItem(QUIZ_KEY) || '{}') || {}; }
+      catch (e) { storageBroken = true; return {}; }
+    }
+    function quizSave(data) {
+      try { localStorage.setItem(QUIZ_KEY, JSON.stringify(data)); return true; }
+      catch (e) { storageBroken = true; return false; }
+    }
+    function renderQuiz() {
+      var saved = quizLoad();
+      var host = document.getElementById('quiz-items');
+      host.innerHTML = '';
+      QUIZ.forEach(function (item, n) {
+        var itemEl = document.createElement('div');
+        itemEl.className = 'quiz-item';
+        var q = document.createElement('p');
+        q.className = 'quiz-question';
+        q.textContent = (n + 1) + '. ' + item.q;
+        var options = document.createElement('div');
+        options.className = 'quiz-options';
+        item.options.forEach(function (text, optionIndex) {
+          var label = document.createElement('label');
+          label.className = 'quiz-option';
+          var input = document.createElement('input');
+          input.type = 'radio'; input.name = 'quiz-' + n; input.value = String(optionIndex);
+          input.checked = saved.answers && saved.answers[n] === optionIndex;
+          input.addEventListener('change', function () {
+            var draft = quizLoad();
+            draft.answers = draft.answers || {};
+            draft.answers[n] = optionIndex;
+            delete draft.checkedAt;
+            quizSave(draft);
+            document.getElementById('quiz-status').hidden = true;
+            document.querySelectorAll('[data-quiz-question="' + n + '"] .quiz-option').forEach(function (x) { x.classList.remove('correct', 'wrong'); });
+          });
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(text));
+          options.appendChild(label);
+        });
+        itemEl.setAttribute('data-quiz-question', String(n));
+        itemEl.appendChild(q); itemEl.appendChild(options); host.appendChild(itemEl);
+      });
+      if (saved.checkedAt) showQuizResult(saved);
+    }
+    function showQuizResult(data) {
+      var right = 0;
+      QUIZ.forEach(function (item, n) {
+        var picked = data.answers && data.answers[n];
+        var group = document.querySelector('[data-quiz-question="' + n + '"]');
+        if (!group) return;
+        group.querySelectorAll('.quiz-option').forEach(function (label, optionIndex) {
+          label.classList.remove('correct', 'wrong');
+          if (optionIndex === item.answer) label.classList.add('correct');
+          else if (picked === optionIndex) label.classList.add('wrong');
+        });
+        if (picked === item.answer) right++;
+      });
+      var status = document.getElementById('quiz-status');
+      status.hidden = false;
+      status.textContent = right + ' из ' + QUIZ.length + '. ' + (right === QUIZ.length ? 'Отлично: фразы про jobs уже уверенно получаются.' : 'Посмотри зелёные варианты и попробуй сказать две фразы вслух. Можно вернуться к этому позже.');
+    }
+    document.getElementById('jobs-quiz').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = quizLoad(); data.answers = data.answers || {};
+      QUIZ.forEach(function (item, n) {
+        var selected = document.querySelector('input[name="quiz-' + n + '"]:checked');
+        if (selected) data.answers[n] = Number(selected.value);
+      });
+      data.checkedAt = new Date().toISOString();
+      quizSave(data); showQuizResult(data);
+    });
+    document.getElementById('quiz-reset').addEventListener('click', function () {
+      try { localStorage.removeItem(QUIZ_KEY); } catch (e) { storageBroken = true; }
+      document.getElementById('quiz-status').hidden = true;
+      renderQuiz();
+    });
+
     // Разбор занятий живёт в review.json: правка файла не требует трогать страницу.
     fetch('review.json', { cache:'no-store' })
       .then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
@@ -465,6 +581,7 @@
     });
 
     renderMarks();
+    renderQuiz();
   </script>
 </body>
 </html>
