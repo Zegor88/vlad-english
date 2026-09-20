@@ -1,93 +1,64 @@
 {
-  "currentQuizId": "jobs-animals-001",
+  "block": {
+    "id": "2026-09-jobs-places-best-things",
+    "title": "Профессии, места и сильные стороны",
+    "createdAt": "2026-09-20",
+    "status": "active",
+    "goal": "Понять общий смысл коротких материалов, заметить точные фразы и сказать одну мысль о себе.",
+    "activities": [
+      { "taskId": "what-will-i-be", "quizId": "jobs-animals-001" },
+      { "taskId": "places-and-free-time", "quizId": "free-time-002" },
+      { "taskId": "our-best-things", "quizId": "best-things-003" }
+    ],
+    "checkIn": {
+      "id": "block-checkin-2026-09",
+      "title": "Как прошёл этот блок?",
+      "purpose": "Это не оценка. Выбери только то, что хочешь отметить — так следующий блок будет точнее.",
+      "items": [
+        { "id": "block-feeling", "type": "choice", "acceptAny": true, "prompt": "Как тебе в целом этот блок?", "options": ["было легко", "было в самый раз", "местами трудно", "не хочу отвечать"] },
+        { "id": "block-format", "type": "choice", "acceptAny": true, "prompt": "Что из этого ты бы выбрал ещё раз?", "options": ["историю с видео", "слушание", "чтение", "короткие вопросы после задания"] },
+        { "id": "block-next", "type": "choice", "acceptAny": true, "prompt": "Что поможет в следующий раз?", "options": ["можно чуть сложнее", "оставить примерно так", "короче задание", "сначала пример со взрослым"] }
+      ]
+    }
+  },
   "quizzes": [
     {
       "id": "jobs-animals-001",
-      "title": "Jobs & animals",
-      "level": "A2 · 10–12 минут",
-      "purpose": "Понять смысл фразы, выбрать точную форму и сказать одну мысль о себе.",
+      "taskId": "what-will-i-be",
+      "title": "После истории: профессии и животные",
+      "level": "3–5 минут · по желанию",
+      "purpose": "Не тест British Council: несколько собственных вопросов по теме профессий, животных и фразе с because.",
       "items": [
-        {
-          "id": "meaning-vet",
-          "type": "choice",
-          "prompt": "My uncle helps sick dogs and cats. He is a …",
-          "options": ["vet", "teacher", "pilot"],
-          "answers": [0],
-          "feedback": "A vet helps animals when they are ill."
-        },
-        {
-          "id": "reason-because",
-          "type": "choice",
-          "prompt": "Choose the sentence that gives a reason.",
-          "options": ["I would like to be a vet because I love animals.", "I would like to be a vet yesterday.", "I would like be a vet because animals."],
-          "answers": [0],
-          "feedback": "After because we give the reason: I love animals."
-        },
-        {
-          "id": "animal-jobs",
-          "type": "multiple",
-          "prompt": "Choose TWO jobs that can work with animals.",
-          "options": ["vet", "animal keeper", "baker", "bus driver"],
-          "answers": [0, 1],
-          "feedback": "Both a vet and an animal keeper can work with animals."
-        },
-        {
-          "id": "future-order",
-          "type": "choice",
-          "prompt": "Which sentence sounds natural?",
-          "options": ["When I grow up, I would like to work with animals.", "When I grow up, I would like work with animals.", "When I grow up, I like would to work animals."],
-          "answers": [0],
-          "feedback": "We say would like to + verb: would like to work."
-        },
-        {
-          "id": "family-jobs",
-          "type": "choice",
-          "prompt": "Which question could you ask about someone’s job?",
-          "options": ["What does your mum do?", "What your mum does yesterday?", "Where your mum job?"],
-          "answers": [0],
-          "feedback": "What does … do? is a useful question about work."
-        },
-        {
-          "id": "say-it",
-          "type": "choice",
-          "acceptAny": true,
-          "prompt": "Say this aloud: “I would like to be a … because … .” Then choose the honest answer.",
-          "options": ["I said it", "I want to try it with an adult", "Not today"],
-          "answers": [0, 1, 2],
-          "feedback": "Any honest answer is fine. The aim is one real sentence, not a perfect performance."
-        }
+        { "id": "meaning-vet", "type": "choice", "prompt": "My uncle helps sick dogs and cats. He is a …", "options": ["vet", "teacher", "pilot"], "answers": [0], "feedback": "A vet helps animals when they are ill." },
+        { "id": "reason-because", "type": "choice", "prompt": "Choose the sentence that gives a reason.", "options": ["I would like to be a vet because I love animals.", "I would like to be a vet yesterday.", "I would like be a vet because animals."], "answers": [0], "feedback": "After because we give the reason: I love animals." },
+        { "id": "animal-jobs", "type": "multiple", "prompt": "Choose TWO jobs that can work with animals.", "options": ["vet", "animal keeper", "baker", "bus driver"], "answers": [0, 1], "feedback": "Both a vet and an animal keeper can work with animals." },
+        { "id": "say-it", "type": "choice", "acceptAny": true, "prompt": "Say aloud: “I would like to be a … because … .” Then choose the honest answer.", "options": ["I said it", "I want to try it with an adult", "Not today"], "answers": [0, 1, 2], "feedback": "Any honest answer is fine." }
       ]
     },
     {
       "id": "free-time-002",
-      "title": "Free time & places",
-      "level": "A2 · следующий набор",
-      "purpose": "После Cambridge A2: уточнять место, время и причину выбора.",
+      "taskId": "places-and-free-time",
+      "title": "После слушания: места и свободное время",
+      "level": "3–4 минуты · по желанию",
+      "purpose": "Собственные вопросы после Cambridge A2: место, занятие и причина выбора.",
       "items": [
-        {
-          "id": "place-meaning",
-          "type": "choice",
-          "prompt": "I’m going to the sports centre after school. What will I probably do?",
-          "options": ["play sport", "go to sleep", "cook dinner"],
-          "answers": [0],
-          "feedback": "A sports centre is a place for sport and exercise."
-        },
-        {
-          "id": "free-time-reason",
-          "type": "choice",
-          "prompt": "Choose the best ending: “I like going to the park because …”",
-          "options": ["I can meet my friends there.", "I went there tomorrow.", "the park is going."],
-          "answers": [0],
-          "feedback": "A because-clause explains why you like something."
-        },
-        {
-          "id": "say-place",
-          "type": "choice",
-          "prompt": "Say one true sentence about where you go after school. Then choose the honest answer.",
-          "options": ["I said it", "I want a model from an adult", "Not today"],
-          "answers": [0, 1, 2],
-          "feedback": "Any honest answer is fine."
-        }
+        { "id": "place-meaning", "type": "choice", "prompt": "I’m going to the sports centre after school. What will I probably do?", "options": ["play sport", "go to sleep", "cook dinner"], "answers": [0], "feedback": "A sports centre is a place for sport and exercise." },
+        { "id": "free-time-reason", "type": "choice", "prompt": "Choose the best ending: “I like going to the park because …”", "options": ["I can meet my friends there.", "I went there tomorrow.", "the park is going."], "answers": [0], "feedback": "A because-clause explains why you like something." },
+        { "id": "ask-a-friend", "type": "choice", "prompt": "Which question sounds natural?", "options": ["Where do you go after school?", "Where you go after school?", "Where do you went after school?"], "answers": [0], "feedback": "For a present routine we say: Where do you go …?" },
+        { "id": "say-place", "type": "choice", "acceptAny": true, "prompt": "Say one true sentence about where you go after school. Then choose the honest answer.", "options": ["I said it", "I want a model from an adult", "Not today"], "answers": [0, 1, 2], "feedback": "Any honest answer is fine." }
+      ]
+    },
+    {
+      "id": "best-things-003",
+      "taskId": "our-best-things",
+      "title": "После чтения: Our best things",
+      "level": "4–5 минут · по желанию",
+      "purpose": "Проверить понимание прочитанного, не переводя текст слово за словом.",
+      "items": [
+        { "id": "tom-best", "type": "choice", "prompt": "What is Tom really good at?", "options": ["swimming", "chess", "painting"], "answers": [0], "feedback": "Tom is an excellent swimmer and daydreams about swimming in the sea." },
+        { "id": "may-best", "type": "choice", "prompt": "What does May want to practise for the school championship?", "options": ["table tennis", "horse riding", "singing"], "answers": [0], "feedback": "May is very good at table tennis." },
+        { "id": "tom-problem", "type": "choice", "prompt": "Why can’t Tom have play time at first?", "options": ["He is daydreaming in class.", "He loses a game.", "He forgets his book."], "answers": [0], "feedback": "Mrs Potter wakes Tom because he is daydreaming." },
+        { "id": "people-best", "type": "multiple", "prompt": "Choose TWO people and their best things from the story.", "options": ["Huang — languages", "Ollie — chess", "Fatima — table tennis", "Charlie — swimming"], "answers": [0, 1], "feedback": "Huang is brilliant at languages, and Ollie is the town’s chess champion." }
       ]
     }
   ]
