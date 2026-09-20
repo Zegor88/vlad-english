@@ -24,18 +24,34 @@ test('block check-in is structured, optional, and contains no free-text collecti
   assert.ok(!page.includes('<textarea'));
   assert.ok(!page.includes('type="text"'));
   assert.match(page, /renderActivityQuiz/);
-  assert.match(page, /renderBlockCheckIn/);
+  assert.match(page, /renderCheckIn/);
 });
 
 test('quiz cards are closed until Vlad chooses to open their linked questions', () => {
   assert.match(page, /document\.createElement\('details'\)/);
   assert.match(page, /box\.open=false/);
-  assert.match(page, /Открыть мини-викторину/);
-  assert.match(page, /Открыть короткий check-in/);
+  assert.match(page, /Открыть короткие вопросы/);
+  assert.match(page, /Выбери, как тебе было/);
 });
 
-test('page describes a current block, its lifecycle, and the voluntary pace', () => {
-  assert.match(page, /Один блок заданий/);
-  assert.match(page, /[Мм]ожно сделать одно задание/);
-  assert.match(page, /Этот блок создан/);
+test('routes support a calm return flow and a non-competitive stopping point', () => {
+  assert.match(page, /Я вернулся/);
+  assert.match(page, /На сегодня достаточно/);
+  assert.match(page, /route-state/);
+  assert.match(page, /vlad-english-route-state-v1/);
+});
+
+test('quiz feedback is learning-first and recovery is actionable', () => {
+  assert.doesNotMatch(page, /Точных ответов:/);
+  assert.match(page, /feedback/);
+  assert.match(page, /Стереть ответы/);
+  assert.match(page, /Подтвердить/);
+  assert.match(page, /Попробовать ещё раз/);
+  assert.match(page, /Видео-история/);
+});
+
+test('page describes a current child-readable block and the voluntary pace', () => {
+  assert.match(page, /Выбери одно задание/);
+  assert.match(page, /в другой день/);
+  assert.match(page, /Ничего догонять не нужно/);
 });
