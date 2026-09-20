@@ -27,6 +27,13 @@ test('block check-in is structured, optional, and contains no free-text collecti
   assert.match(page, /renderBlockCheckIn/);
 });
 
+test('quiz cards are closed until Vlad chooses to open their linked questions', () => {
+  assert.match(page, /document\.createElement\('details'\)/);
+  assert.match(page, /box\.open=false/);
+  assert.match(page, /Открыть мини-викторину/);
+  assert.match(page, /Открыть короткий check-in/);
+});
+
 test('page describes a current block, its lifecycle, and the voluntary pace', () => {
   assert.match(page, /Один блок заданий/);
   assert.match(page, /[Мм]ожно сделать одно задание/);
