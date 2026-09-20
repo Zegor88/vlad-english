@@ -1,0 +1,22 @@
+name: Review English answer patterns
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          wranglerVersion: '4.131.1'
+          workingDirectory: answers-worker
+          command: >-
+            d1 execute vlad_english_answers --remote --json --command
+            "SELECT quiz_id, question_id, correct, COUNT(*) AS answers, MAX(submitted_at) AS last_answer_at
+            FROM answers GROUP BY quiz_id, question_id, correct ORDER BY last_answer_at DESC;"
