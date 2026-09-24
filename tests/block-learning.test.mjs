@@ -50,6 +50,12 @@ test('quiz feedback is learning-first and recovery is actionable', () => {
   assert.match(page, /Видео-история/);
 });
 
+test('a saved quiz is not sent again after repeated taps', () => {
+  assert.match(page, /sentToFamily/);
+  assert.match(page, /Уже сохранено/);
+  assert.match(page, /button\.disabled=true/);
+});
+
 test('page describes a current child-readable block and the voluntary pace', () => {
   assert.match(page, /Выбери одно задание/);
   assert.match(page, /в другой день/);
