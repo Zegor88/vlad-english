@@ -7,8 +7,8 @@ const bank = JSON.parse(fs.readFileSync(new URL('quiz-bank.json', root), 'utf8')
 const page = fs.readFileSync(new URL('index.html', root), 'utf8');
 
 test('current block has an optional quiz after each prepared activity', () => {
-  const tasks = ['what-will-i-be', 'places-and-free-time', 'our-best-things'];
-  assert.equal(bank.block.id, '2026-09-jobs-places-best-things');
+  const tasks = ['past-simple-questions', 'at-the-museum', 'jack-and-the-beanstalk'];
+  assert.equal(bank.block.id, '2026-09-past-questions-museum-adventure');
   assert.deepEqual(bank.block.activities.map(activity => activity.taskId), tasks);
   for (const activity of bank.block.activities) {
     const quiz = bank.quizzes.find(item => item.id === activity.quizId);
@@ -19,7 +19,7 @@ test('current block has an optional quiz after each prepared activity', () => {
 });
 
 test('block check-in is structured, optional, and contains no free-text collection', () => {
-  assert.equal(bank.block.checkIn.id, 'block-checkin-2026-09');
+  assert.equal(bank.block.checkIn.id, 'block-checkin-2026-09-24');
   assert.ok(bank.block.checkIn.items.every(item => Array.isArray(item.options) && item.options.length >= 2));
   assert.ok(!page.includes('<textarea'));
   assert.ok(!page.includes('type="text"'));

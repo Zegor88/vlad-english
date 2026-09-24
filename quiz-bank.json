@@ -1,64 +1,64 @@
 {
   "block": {
-    "id": "2026-09-jobs-places-best-things",
-    "title": "Профессии, места и сильные стороны",
-    "createdAt": "2026-09-20",
+    "id": "2026-09-past-questions-museum-adventure",
+    "title": "Прошедшее время, детали и приключение",
+    "createdAt": "2026-09-24",
     "status": "active",
-    "goal": "Понять общий смысл коротких материалов, заметить точные фразы и сказать одну мысль о себе.",
+    "goal": "Задать или понять простой вопрос о прошлом, заметить одну разницу на картинках и уловить порядок событий в истории.",
     "activities": [
-      { "taskId": "what-will-i-be", "quizId": "jobs-animals-001" },
-      { "taskId": "places-and-free-time", "quizId": "free-time-002" },
-      { "taskId": "our-best-things", "quizId": "best-things-003" }
+      { "taskId": "past-simple-questions", "quizId": "past-questions-004" },
+      { "taskId": "at-the-museum", "quizId": "museum-differences-005" },
+      { "taskId": "jack-and-the-beanstalk", "quizId": "jack-story-006" }
     ],
     "checkIn": {
-      "id": "block-checkin-2026-09",
+      "id": "block-checkin-2026-09-24",
       "title": "Как прошёл этот блок?",
       "purpose": "Это не оценка. Выбери только то, что хочешь отметить — так следующий блок будет точнее.",
       "items": [
-        { "id": "block-feeling", "type": "choice", "acceptAny": true, "prompt": "Как тебе в целом этот блок?", "options": ["было легко", "было в самый раз", "местами трудно", "не хочу отвечать"] },
-        { "id": "block-format", "type": "choice", "acceptAny": true, "prompt": "Что из этого ты бы выбрал ещё раз?", "options": ["историю с видео", "слушание", "чтение", "короткие вопросы после задания"] },
+        { "id": "block-feeling", "type": "choice", "acceptAny": true, "prompt": "Как тебе этот блок в целом?", "options": ["было легко", "было в самый раз", "местами трудно", "не хочу отвечать"] },
+        { "id": "block-format", "type": "choice", "acceptAny": true, "prompt": "Какой формат хочется открыть ещё раз?", "options": ["короткое правило и примеры", "картинки и фразы", "историю с видео", "короткие вопросы после задания"] },
         { "id": "block-next", "type": "choice", "acceptAny": true, "prompt": "Что поможет в следующий раз?", "options": ["можно чуть сложнее", "оставить примерно так", "короче задание", "сначала пример со взрослым"] }
       ]
     }
   },
   "quizzes": [
     {
-      "id": "jobs-animals-001",
-      "taskId": "what-will-i-be",
-      "title": "После истории: профессии и животные",
-      "level": "3–5 минут · по желанию",
-      "purpose": "Не тест British Council: несколько собственных вопросов по теме профессий, животных и фразе с because.",
-      "items": [
-        { "id": "meaning-vet", "type": "choice", "prompt": "My uncle helps sick dogs and cats. He is a …", "options": ["vet", "teacher", "pilot"], "answers": [0], "feedback": "A vet helps animals when they are ill." },
-        { "id": "reason-because", "type": "choice", "prompt": "Choose the sentence that gives a reason.", "options": ["I would like to be a vet because I love animals.", "I would like to be a vet yesterday.", "I would like be a vet because animals."], "answers": [0], "feedback": "After because we give the reason: I love animals." },
-        { "id": "animal-jobs", "type": "multiple", "prompt": "Choose TWO jobs that can work with animals.", "options": ["vet", "animal keeper", "baker", "bus driver"], "answers": [0, 1], "feedback": "Both a vet and an animal keeper can work with animals." },
-        { "id": "say-it", "type": "choice", "acceptAny": true, "prompt": "Say aloud: “I would like to be a … because … .” Then choose the honest answer.", "options": ["I said it", "I want to try it with an adult", "Not today"], "answers": [0, 1, 2], "feedback": "Any honest answer is fine." }
-      ]
-    },
-    {
-      "id": "free-time-002",
-      "taskId": "places-and-free-time",
-      "title": "После слушания: места и свободное время",
+      "id": "past-questions-004",
+      "taskId": "past-simple-questions",
+      "title": "После задания: спросить о прошлом",
       "level": "3–4 минуты · по желанию",
-      "purpose": "Собственные вопросы после Cambridge A2: место, занятие и причина выбора.",
+      "purpose": "Собственные короткие вопросы по идее задания British Council: после did глагол остаётся в обычной форме.",
       "items": [
-        { "id": "place-meaning", "type": "choice", "prompt": "I’m going to the sports centre after school. What will I probably do?", "options": ["play sport", "go to sleep", "cook dinner"], "answers": [0], "feedback": "A sports centre is a place for sport and exercise." },
-        { "id": "free-time-reason", "type": "choice", "prompt": "Choose the best ending: “I like going to the park because …”", "options": ["I can meet my friends there.", "I went there tomorrow.", "the park is going."], "answers": [0], "feedback": "A because-clause explains why you like something." },
-        { "id": "ask-a-friend", "type": "choice", "prompt": "Which question sounds natural?", "options": ["Where do you go after school?", "Where you go after school?", "Where do you went after school?"], "answers": [0], "feedback": "For a present routine we say: Where do you go …?" },
-        { "id": "say-place", "type": "choice", "acceptAny": true, "prompt": "Say one true sentence about where you go after school. Then choose the honest answer.", "options": ["I said it", "I want a model from an adult", "Not today"], "answers": [0, 1, 2], "feedback": "Any honest answer is fine." }
+        { "id": "did-go", "type": "choice", "prompt": "Choose the natural question about yesterday.", "options": ["Did you play hockey yesterday?", "Did you played hockey yesterday?", "Do you played hockey yesterday?"], "answers": [0], "feedback": "После did используем обычную форму: play, а не played." },
+        { "id": "where-go", "type": "choice", "prompt": "Choose the best question: “___ did Max go after school?”", "options": ["Where", "What", "Who"], "answers": [0], "feedback": "Where спрашивает о месте: Where did Max go?" },
+        { "id": "short-answer", "type": "choice", "prompt": "Did Anna watch a film last night? — Yes, she …", "options": ["did", "watched", "does"], "answers": [0], "feedback": "На короткий вопрос с did можно ответить: Yes, she did." },
+        { "id": "say-past-question", "type": "choice", "acceptAny": true, "prompt": "Спроси взрослого один вопрос о вчерашнем дне, например: “What did you do yesterday?” Затем выбери честный ответ.", "options": ["Я спросил", "Хочу пример от взрослого", "Не сегодня"], "answers": [0, 1, 2], "feedback": "Любой честный выбор подходит. Вопрос можно сказать вслух, не писать." }
       ]
     },
     {
-      "id": "best-things-003",
-      "taskId": "our-best-things",
-      "title": "После чтения: Our best things",
-      "level": "4–5 минут · по желанию",
-      "purpose": "Проверить понимание прочитанного, не переводя текст слово за словом.",
+      "id": "museum-differences-005",
+      "taskId": "at-the-museum",
+      "title": "После задания: заметить разницу",
+      "level": "3–4 минуты · по желанию",
+      "purpose": "Собственные вопросы по идее Cambridge A2: сказать, что на двух картинках отличается.",
       "items": [
-        { "id": "tom-best", "type": "choice", "prompt": "What is Tom really good at?", "options": ["swimming", "chess", "painting"], "answers": [0], "feedback": "Tom is an excellent swimmer and daydreams about swimming in the sea." },
-        { "id": "may-best", "type": "choice", "prompt": "What does May want to practise for the school championship?", "options": ["table tennis", "horse riding", "singing"], "answers": [0], "feedback": "May is very good at table tennis." },
-        { "id": "tom-problem", "type": "choice", "prompt": "Why can’t Tom have play time at first?", "options": ["He is daydreaming in class.", "He loses a game.", "He forgets his book."], "answers": [0], "feedback": "Mrs Potter wakes Tom because he is daydreaming." },
-        { "id": "people-best", "type": "multiple", "prompt": "Choose TWO people and their best things from the story.", "options": ["Huang — languages", "Ollie — chess", "Fatima — table tennis", "Charlie — swimming"], "answers": [0, 1], "feedback": "Huang is brilliant at languages, and Ollie is the town’s chess champion." }
+        { "id": "there-is", "type": "choice", "prompt": "Picture A has a red hat. Picture B has a blue hat. Choose the clear sentence.", "options": ["In picture A, the hat is red. In picture B, it is blue.", "In picture A, the hat red. In picture B, blue.", "Picture A has red yesterday."], "answers": [0], "feedback": "Для описания используем полное предложение: the hat is red." },
+        { "id": "one-difference", "type": "choice", "prompt": "Which phrase can begin a difference?", "options": ["In this picture, there is …", "Yesterday because …", "Did you different …"], "answers": [0], "feedback": "Начать можно так: In this picture, there is …" },
+        { "id": "plural-difference", "type": "choice", "prompt": "Picture A has two cats. Picture B has one cat. Which sentence is right?", "options": ["There are two cats in picture A.", "There is two cats in picture A.", "There two cats are picture A."], "answers": [0], "feedback": "С двумя предметами говорим there are." },
+        { "id": "say-difference", "type": "choice", "acceptAny": true, "prompt": "Назови взрослому одну разницу, которую заметил в задании. Затем выбери честный ответ.", "options": ["Я сказал", "Хочу сказать вместе со взрослым", "Не сегодня"], "answers": [0, 1, 2], "feedback": "Любой честный выбор подходит. Достаточно одной разницы." }
+      ]
+    },
+    {
+      "id": "jack-story-006",
+      "taskId": "jack-and-the-beanstalk",
+      "title": "После истории: что было сначала?",
+      "level": "4–5 минут · по желанию",
+      "purpose": "Собственные вопросы на общий смысл и порядок событий после истории British Council.",
+      "items": [
+        { "id": "jack-traded", "type": "choice", "prompt": "What did Jack get for his cow?", "options": ["magic beans", "a red hat", "a new bike"], "answers": [0], "feedback": "Jack exchanged his cow for magic beans." },
+        { "id": "first-event", "type": "choice", "prompt": "What happened before Jack climbed the beanstalk?", "options": ["His mother threw the beans out of the window.", "The giant crashed to the ground.", "Jack took the harp home."], "answers": [0], "feedback": "Сначала мама выбросила бобы; на следующее утро вырос огромный стебель." },
+        { "id": "giant-items", "type": "multiple", "prompt": "Choose TWO things the giant had.", "options": ["a hen", "a golden harp", "a football", "a bicycle"], "answers": [0, 1], "feedback": "У великана были курица и золотая арфа." },
+        { "id": "retell-one", "type": "choice", "acceptAny": true, "prompt": "Скажи взрослому одно событие из истории в прошедшем времени, например: “Jack climbed the beanstalk.” Затем выбери честный ответ.", "options": ["Я сказал", "Хочу пример от взрослого", "Не сегодня"], "answers": [0, 1, 2], "feedback": "Любой честный выбор подходит. Не нужно пересказывать всю историю." }
       ]
     }
   ]
