@@ -7,10 +7,13 @@ const bank = JSON.parse(fs.readFileSync(new URL('quiz-bank.json', root), 'utf8')
 const page = fs.readFileSync(new URL('index.html', root), 'utf8');
 
 test('Past Simple course explains the rule before asking for practice', () => {
-  assert.match(page, /Правило без угадывания/);
+  assert.match(page, /Как выбрать форму глагола/);
+  assert.match(page, /Сначала посмотри на слово перед глаголом/);
   assert.match(page, /did\/didn’t.*обычная форма/);
   assert.match(page, /was\/were.*отдельное правило/);
-  assert.match(page, /Почему так\?/);
+  assert.match(page, /Я вернулся — открыть вопросы/);
+  assert.match(page, /aria-busy/);
+  assert.match(page, /role="status"/);
 });
 
 test('current block has an optional quiz after each prepared activity', () => {
