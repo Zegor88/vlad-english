@@ -6,6 +6,13 @@ const root = new URL('..', import.meta.url);
 const bank = JSON.parse(fs.readFileSync(new URL('quiz-bank.json', root), 'utf8'));
 const page = fs.readFileSync(new URL('index.html', root), 'utf8');
 
+test('Past Simple course explains the rule before asking for practice', () => {
+  assert.match(page, /Правило без угадывания/);
+  assert.match(page, /did\/didn’t.*обычная форма/);
+  assert.match(page, /was\/were.*отдельное правило/);
+  assert.match(page, /Почему так\?/);
+});
+
 test('current block has an optional quiz after each prepared activity', () => {
   const tasks = ['past-simple-sentences', 'past-simple-be', 'past-simple-questions'];
   assert.equal(bank.block.id, '2026-09-past-simple-core-course');
