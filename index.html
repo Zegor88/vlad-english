@@ -1,1 +1,171 @@
-<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>English</title><style>body{margin:0;background:#eef4ef;color:#183126;font:18px/1.5 system-ui}main{max-width:680px;margin:auto;padding:28px 18px}h1{font:800 clamp(2.2rem,8vw,3.5rem)/1 Georgia,serif}.panel{background:white;border:1px solid #c7d6cc;border-radius:20px;padding:20px;margin:16px 0}.path{display:flex;gap:7px;flex-wrap:wrap}.dot{width:28px;height:28px;border-radius:50%;border:2px solid #579174;text-align:center;font-weight:800}.dot.on{background:#17644e;color:white;border-color:#17644e}.tag{color:#5a6b61;font-weight:700;font-size:.85rem}button,a{display:block;width:100%;box-sizing:border-box;min-height:54px;margin-top:12px;border:0;border-radius:13px;background:#17644e;color:white;text-align:center;padding:14px;font:800 1rem system-ui;text-decoration:none}.quiet{background:white;color:#17644e;border:1px solid #c7d6cc}.option{display:flex;gap:10px;border:1px solid #c7d6cc;border-radius:12px;padding:13px;margin:9px 0;font-weight:650}.option input{width:21px;height:21px}.feedback{padding:12px;background:#fff6e2;border-radius:12px}.hidden{display:none}</style><main><h1>Карта времён</h1><p>Сначала выбери смысл: <b>обычно</b>, <b>сейчас</b>, <b>вчера</b> или <b>в момент вчера</b>. Потом форма станет понятнее.</p><section class="panel"><div class="tag">ТВОЙ ПУТЬ</div><div class="path" id="path"></div><p id="resume">Сегодня: короткий шаг</p><button id="start">Начать</button><button class="quiet" id="all">Все шаги</button></section><section class="panel" id="lesson"><div class="tag" id="count"></div><h2 id="title"></h2><p id="rule"></p><p id="example"></p><button id="practice">Попробовать один вопрос</button><p id="extra" class="hidden"></p><a id="resource" class="hidden" target="_blank" rel="noopener noreferrer">Хочешь ещё? Дополнительная игра</a><button class="quiet" id="stop">На сегодня достаточно</button></section><section class="panel hidden" id="quiz"><div class="tag">ОДИН ВОПРОС</div><p id="question"></p><div id="options"></div><p id="feedback" class="feedback hidden"></p><button id="next">Следующий вопрос</button><button class="quiet" id="finish">Сегодня хватит</button></section><section class="panel hidden" id="done"><h2>Сегодня хватит</h2><p id="doneText">Ты остановился на шаге 1. В следующий раз начнём отсюда.</p><button id="map">Вернуться к карте</button></section><section class="panel hidden" id="steps"></section></main><script>(()=>{const K='vlad-english-tense-path-v1';let s=JSON.parse(localStorage.getItem(K)||'{"step":0,"done":[]}');const L=[['Факт или процесс?','Simple — факт, привычка или завершённое событие. Continuous — действие в процессе.','Every Saturday I play. / I am playing now.','Every Saturday I play hockey. Это…',['привычка','действие сейчас','вчера'],0,null],['Present Simple: обычно','do/does → обычный глагол. С he/she/it: plays.','He plays on Fridays.','He doesn’t ___ tennis.',['play','plays','playing'],0,'https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-present-continuous'],['Present Continuous: сейчас','am/is/are + глагол-ing.','She is reading now.','Look! The team ___.',['is training','trains','trained'],0,'https://www.cambridgeenglish.org/learning-english/activities-for-learners/a1g002-present-simple-and-present-continuous-questions'],['Past Simple: факт вчера','did/didn’t → обычный глагол.','Did you play? I didn’t play.','Yesterday we ___ home.',['went','goed','go'],0,'https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-sentences'],['Past Continuous: момент вчера','was/were + глагол-ing.','At 5 I was playing.','At 7 yesterday I ___ dinner.',['was having','had','am having'],0,null],['Past Simple или Continuous?','Факт: played. Процесс в момент: was playing.','Yesterday I played. At 6 I was playing.','At 6 yesterday I ___ a game.',['was playing','played','am playing'],0,null],['Смешанная практика','Обычно? Сейчас? Вчера? В момент вчера?','Сначала смысл, потом форма.','Every morning he ___ breakfast.',['has','is having','was having'],0,null]];const $=id=>document.getElementById(id);function save(){localStorage.setItem(K,JSON.stringify(s))}function render(){let x=L[s.step];$('path').innerHTML=L.map((_,i)=>'<span class="dot '+(i===s.step?'on':s.done.includes(i)?'on':'')+'">'+(i+1)+'</span>').join('');$('resume').textContent=(s.done.length?'Продолжить: ':'Сегодня: ')+'Шаг '+(s.step+1)+' из 7';$('count').textContent='ШАГ '+(s.step+1)+' ИЗ 7';$('title').textContent=x[0];$('rule').textContent=x[1];$('example').textContent=x[2];$('resource').classList.toggle('hidden',!x[5]);if(x[5])$('resource').href=x[5];$('lesson').classList.remove('hidden');$('quiz').classList.add('hidden');$('done').classList.add('hidden')}$('start').onclick=render;$('practice').onclick=()=>{let x=L[s.step];$('question').textContent=x[3];$('options').innerHTML=x[4].map((o,i)=>'<label class="option"><input type="radio" name="a" value="'+i+'">'+o+'</label>').join('');$('feedback').classList.add('hidden');$('lesson').classList.add('hidden');$('quiz').classList.remove('hidden')};$('next').onclick=()=>{let x=L[s.step],v=document.querySelector('input[name=a]:checked');if(!v){$('feedback').textContent='Сначала выбери вариант — можно попробовать спокойно.';$('feedback').classList.remove('hidden');return}$('feedback').textContent=+v.value===x[5]?'Верно. '+x[1]:'Почти. '+x[1];$('feedback').classList.remove('hidden');s.done=[...new Set([...s.done,s.step])];if(s.step<6)s.step++;save();$('next').textContent='Продолжить к следующему шагу';$('next').onclick=render};function stop(){save();$('lesson').classList.add('hidden');$('quiz').classList.add('hidden');$('doneText').textContent='Ты остановился на шаге '+(s.step+1)+'. В следующий раз начнём отсюда.';$('done').classList.remove('hidden')}$('stop').onclick=stop;$('finish').onclick=stop;$('map').onclick=render;$('all').onclick=()=>{$('steps').classList.toggle('hidden');$('steps').innerHTML='<h2>Все шаги</h2>'+L.map((x,i)=>'<button class="quiet" data-i="'+i+'">'+(i+1)+'. '+x[0]+'</button>').join('');$('steps').querySelectorAll('button').forEach(b=>b.onclick=()=>{s.step=+b.dataset.i;save();render()})};render()})();</script></html>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English — карта времён</title>
+<style>
+:root{--ink:#183126;--muted:#56685e;--paper:#eef4ef;--card:#fff;--line:#c6d5cb;--accent:#17644e;--accent-dark:#0f4b39;--soft:#e4f1e8;--warm:#fff6e2;--warm-line:#ecd9a8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+main{width:min(100%,700px);margin:0 auto;padding:26px 18px 56px}
+h1{margin:0 0 10px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.2rem,8vw,3.4rem);line-height:1;letter-spacing:-.03em}
+h2{font-size:1.3rem;line-height:1.2;margin:6px 0 10px}
+p{margin:0 0 10px}
+.quiet{color:var(--muted)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 1px 3px rgba(24,49,38,.06)}
+.tag{color:var(--muted);font-size:.76rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.path{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.dot{width:34px;height:34px;border-radius:50%;border:2px solid #7fa992;display:grid;place-items:center;font-weight:800;font-size:.9rem;background:#fff;color:#2c5c48}
+.dot.current{background:var(--accent);border-color:var(--accent);color:#fff}
+.dot.done{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+button,a.btn{display:block;width:100%;min-height:54px;margin-top:10px;padding:14px 16px;border:0;border-radius:13px;background:var(--accent);color:#fff;text-align:center;text-decoration:none;font:800 1rem/1.25 -apple-system,system-ui,sans-serif;cursor:pointer}
+button:active,a.btn:active{background:var(--accent-dark)}
+button.secondary,a.btn.secondary{background:#fff;color:var(--accent);border:1px solid var(--line)}
+button.link{background:none;border:0;color:var(--accent);text-decoration:underline;font:700 .95rem system-ui;min-height:44px;margin-top:6px;padding:8px}
+button:disabled{opacity:.6;cursor:default}
+.rule{padding:13px;border-radius:12px;background:var(--soft);margin:12px 0;font-weight:600}
+.example{padding:12px;border:1px dashed var(--line);border-radius:12px;color:#2c4a3c}
+.option{display:flex;gap:11px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:13px;margin:9px 0;font-weight:650;cursor:pointer;background:#fff}
+.option:has(input:checked){border-color:var(--accent);background:var(--soft)}
+.option input{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.feedback{padding:13px;border-radius:12px;background:var(--warm);border:1px solid var(--warm-line);font-weight:600;margin-top:12px}
+.res-links{display:grid;gap:8px;margin-top:10px}
+.res{display:block;padding:12px 13px;border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--ink);background:#fff}
+.res b{display:block;font-size:.98rem}
+.res span{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.all-links{margin-top:12px}
+.all-links h3{font-size:1rem;margin:14px 0 6px}
+.step-list button{text-align:left}
+.hidden{display:none!important}
+@media(max-width:420px){main{padding:20px 14px 44px}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Карта времён</h1>
+<p>Сначала выбери смысл: <b>обычно</b>, <b>сейчас</b>, <b>вчера</b> или <b>в момент вчера</b>. Потом станет понятна форма.</p>
+</header>
+
+<section class="panel" aria-label="Твой путь">
+<div class="tag">Твой путь</div>
+<div class="path" id="path"></div>
+<p id="resume" class="quiet">Сегодня: шаг 1 из 7</p>
+<button id="start" data-act="start" type="button">Начать</button>
+<button class="link" data-act="all" type="button">Все шаги и ссылки на занятия</button>
+<div id="steps" class="step-list hidden"></div>
+</section>
+
+<section class="panel" id="lesson" aria-live="polite"></section>
+<section class="panel hidden" id="quiz" aria-live="polite"></section>
+<section class="panel hidden" id="done" aria-live="polite"></section>
+
+<section class="panel all-links" id="resources" aria-label="Ссылки на занятия British Council и Cambridge">
+<div class="tag">Занятия на British Council и Cambridge</div>
+<p class="quiet">Все ссылки открываются в новой вкладке. Можно зайти в любой момент — это не обязательная часть шага.</p>
+
+<h3>1. Факт или процесс</h3>
+<a class="res" href="https://assets.cambridgeenglish.org/portal/learner/a1/grammar.html" target="_blank" rel="noopener noreferrer"><b>Cambridge · Grammar A1</b><span>Короткая грамматика уровня A1 · новая вкладка</span></a>
+
+<h3>2. Present Simple — обычно</h3>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-verb-be" target="_blank" rel="noopener noreferrer"><b>British Council · Present simple — verb «to be»</b><span>am / is / are · новая вкладка</span></a>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-present-continuous" target="_blank" rel="noopener noreferrer"><b>British Council · Present simple and present continuous</b><span>Правило и игра · новая вкладка</span></a>
+
+<h3>3. Present Continuous — сейчас</h3>
+<a class="res" href="https://www.cambridgeenglish.org/learning-english/activities-for-learners/a1g002-present-simple-and-present-continuous-questions" target="_blank" rel="noopener noreferrer"><b>Cambridge · Present simple and present continuous questions</b><span>Выбрать правильный вопрос · новая вкладка</span></a>
+
+<h3>4. Past Simple — факт вчера</h3>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-sentences" target="_blank" rel="noopener noreferrer"><b>British Council · Past simple — sentences</b><span>played / went / didn’t · новая вкладка</span></a>
+<a class="res" href="https://www.cambridgeenglish.org/learning-english/activities-for-learners/a1g003-past-simple-of-irregular-verbs" target="_blank" rel="noopener noreferrer"><b>Cambridge · Past simple of irregular verbs</b><span>Неправильные глаголы · новая вкладка</span></a>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-verb-be" target="_blank" rel="noopener noreferrer"><b>British Council · Past simple — verb «to be»</b><span>was / were · новая вкладка</span></a>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-questions" target="_blank" rel="noopener noreferrer"><b>British Council · Past simple — questions</b><span>Did you…? · новая вкладка</span></a>
+
+<h3>5. Past Continuous — момент вчера</h3>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/category/grammar/grammar-past-progressive" target="_blank" rel="noopener noreferrer"><b>British Council · Past progressive</b><span>Истории и видео с was/were + -ing · новая вкладка</span></a>
+
+<h3>6. Past Simple или Continuous</h3>
+<a class="res" href="https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-sentences" target="_blank" rel="noopener noreferrer"><b>British Council · Past simple — sentences</b><span>Повторить законченный факт · новая вкладка</span></a>
+
+<h3>7. Смешанная практика</h3>
+<a class="res" href="https://www.cambridgeenglish.org/learning-english/activities-for-learners/?level=basic&amp;skill=grammar" target="_blank" rel="noopener noreferrer"><b>Cambridge · Activities for learners, grammar A1–A2</b><span>Список коротких упражнений · новая вкладка</span></a>
+</section>
+
+<p class="quiet">Два коротких занятия в неделю достаточно. Если сегодня не хочется — это нормальный день.</p>
+</main>
+<script>
+(()=>{
+const KEY='vlad-english-tense-path-v2';
+const STEPS=[
+ {title:'Факт или процесс?',rule:'Simple — факт, привычка или завершённое событие. Continuous — действие в процессе, как кадр из фильма.',example:'Every Saturday I play hockey. / I am playing now.',q:'Every Saturday I play hockey. Это…',opts:['привычка','действие сейчас','вчера'],ok:0,links:[['Cambridge · Grammar A1','https://assets.cambridgeenglish.org/portal/learner/a1/grammar.html']]},
+ {title:'Present Simple: обычно',rule:'do/does → обычный глагол. С he/she/it: plays. После doesn’t: play.',example:'He plays on Fridays. He doesn’t play on Sundays.',q:'He doesn’t ___ tennis.',opts:['play','plays','playing'],ok:0,links:[['British Council · Present simple — verb «to be»','https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-verb-be'],['British Council · Present simple and present continuous','https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-present-continuous']]},
+ {title:'Present Continuous: сейчас',rule:'am/is/are + глагол-ing.',example:'She is reading now. Are you playing?',q:'Look! The team ___.',opts:['is training','trains','trained'],ok:0,links:[['British Council · Present simple and present continuous','https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/present-simple-present-continuous'],['Cambridge · Present simple and present continuous questions','https://www.cambridgeenglish.org/learning-english/activities-for-learners/a1g002-present-simple-and-present-continuous-questions']]},
+ {title:'Past Simple: факт вчера',rule:'Past Simple — законченный факт. did/didn’t → обычный глагол.',example:'Did you play? I didn’t play. Yesterday we went home.',q:'Yesterday we ___ home.',opts:['went','goed','go'],ok:0,links:[['British Council · Past simple — sentences','https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-sentences'],['Cambridge · Past simple of irregular verbs','https://www.cambridgeenglish.org/learning-english/activities-for-learners/a1g003-past-simple-of-irregular-verbs'],['British Council · Past simple — questions','https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-questions']]},
+ {title:'Past Continuous: момент вчера',rule:'was/were + глагол-ing. I/he/she was; you/we/they were.',example:'At 5 o’clock I was playing hockey.',q:'At 7 yesterday I ___ dinner.',opts:['was having','had','am having'],ok:0,links:[['British Council · Past progressive','https://learnenglishkids.britishcouncil.org/category/grammar/grammar-past-progressive']]},
+ {title:'Past Simple или Continuous?',rule:'Факт: played. Процесс в момент: was playing.',example:'Yesterday I played. At 6 I was playing.',q:'At 6 yesterday I ___ a game.',opts:['was playing','played','am playing'],ok:0,links:[['British Council · Past simple — sentences','https://learnenglishkids.britishcouncil.org/grammar-vocabulary/grammar-practice/past-simple-sentences'],['British Council · Past progressive','https://learnenglishkids.britishcouncil.org/category/grammar/grammar-past-progressive']]},
+ {title:'Смешанная практика',rule:'Сначала смысл, потом форма.',example:'Обычно? Сейчас? Вчера? В момент вчера?',q:'Every morning he ___ breakfast.',opts:['has','is having','was having'],ok:0,links:[['Cambridge · Activities for learners, grammar A1–A2','https://www.cambridgeenglish.org/learning-english/activities-for-learners/?level=basic&skill=grammar']]}
+];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');return{step:Number.isInteger(s.step)?s.step:0,done:Array.isArray(s.done)?s.done:[],mode:s.mode==='quiz'?'quiz':'lesson',choice:(typeof s.choice==='number')?s.choice:null}}catch(e){return{step:0,done:[],mode:'lesson',choice:null}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+let state=load();
+const S=()=>STEPS[state.step];
+function linksHtml(list){return '<div class="res-links">'+list.map(([label,href])=>'<a class="res" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer"><b>'+esc(label)+'</b><span>Откроется в новой вкладке</span></a>').join('')+'</div>'}
+function renderPath(){
+ $('path').innerHTML=STEPS.map((_,i)=>'<span class="dot '+(i===state.step?'current':(state.done.includes(i)?'done':' '))+'">'+(i+1)+'</span>').join('');
+ $('resume').textContent=(state.done.length?'Продолжить: ':'Сегодня: ')+'шаг '+(state.step+1)+' из '+STEPS.length;
+ $('start').textContent=state.done.length?'Продолжить':'Начать';
+}
+function renderLesson(){
+ const s=S();
+ $('lesson').innerHTML='<div class="tag">Шаг '+(state.step+1)+' из '+STEPS.length+'</div><h2>'+esc(s.title)+'</h2><div class="rule">'+esc(s.rule)+'</div><p class="example">'+esc(s.example)+'</p><p class="tag" style="margin-top:16px">Занятия по теме</p>'+linksHtml(s.links)+'<button data-act="practice" type="button">Попробовать один вопрос</button><button class="secondary" data-act="stop" type="button">На сегодня достаточно</button>';
+ $('lesson').classList.remove('hidden');
+}
+function renderQuiz(){
+ const s=S();
+ const fb=state.checked?(state.choice===s.ok?'<p class="feedback">Верно. '+esc(s.rule)+'</p>':'<p class="feedback">Почти. '+esc(s.rule)+'</p>'):'';
+ $('quiz').innerHTML='<div class="tag">Один вопрос</div><h2>'+esc(s.q)+'</h2>'+s.opts.map((o,i)=>'<label class="option"><input type="radio" name="ans" value="'+i+'"'+(state.choice===i?' checked':'')+'><span>'+esc(o)+'</span></label>').join('')+fb+(state.checked?'<button data-act="next" type="button">Дальше</button>':'<button data-act="check" type="button">Проверить ответ</button>')+'<button class="secondary" data-act="stop" type="button">Сегодня хватит</button>';
+ $('quiz').classList.remove('hidden');
+}
+function renderDone(){
+ $('done').innerHTML='<h2>Сегодня хватит</h2><p id="doneText">Ты остановился на шаге '+(state.step+1)+'. В следующий раз начнём отсюда.</p><p class="quiet">Можно вернуться к карте или закрыть страницу — прогресс сохранится на этом iPad.</p><button data-act="map" type="button">Вернуться к карте</button>';
+ $('done').classList.remove('hidden');
+}
+function render(){
+ renderPath();
+ $('quiz').classList.add('hidden');$('done').classList.add('hidden');
+ if(state.mode==='quiz'){renderQuiz();$('lesson').classList.add('hidden')}
+ else if(state.mode==='done'){renderDone();$('lesson').classList.add('hidden')}
+ else{renderLesson()}
+}
+function setStep(i){state.step=Math.max(0,Math.min(STEPS.length-1,i));state.mode='lesson';state.choice=null;state.checked=false;save();render();try{document.getElementById('lesson').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}}
+function renderSteps(){
+ const box=$('steps');
+ box.innerHTML='<h3>Все шаги</h3>'+STEPS.map((s,i)=>'<button class="secondary" data-act="pick" data-i="'+i+'" type="button">'+(state.done.includes(i)?'✓ ':'')+(i+1)+'. '+esc(s.title)+'</button>').join('');
+}
+$('start').addEventListener('click',()=>{setStep(state.step)});
+document.body.addEventListener('click',e=>{
+ const b=e.target.closest('[data-act]');if(!b)return;
+ const act=b.dataset.act;
+ if(act==='all'){const box=$('steps');if(box.classList.contains('hidden')){renderSteps();box.classList.remove('hidden');b.textContent='Скрыть список шагов'}else{box.classList.add('hidden');b.textContent='Все шаги и ссылки на занятия'}}
+ else if(act==='pick'){setStep(Number(b.dataset.i))}
+ else if(act==='practice'){state.mode='quiz';state.choice=null;state.checked=false;save();render();try{document.getElementById('quiz').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}}
+ else if(act==='check'){
+  const picked=document.querySelector('input[name="ans"]:checked');
+  if(!picked){state.choice=null;state.checked=false;$('quiz').insertAdjacentHTML('beforeend','<p class="feedback">Сначала выбери вариант — можно спокойно подумать.</p>');return}
+  state.choice=Number(picked.value);state.checked=true;
+  state.done=Array.from(new Set([...state.done,state.step]));save();render();try{document.getElementById('quiz').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}
+ }
+ else if(act==='next'){
+  if(state.step<STEPS.length-1){setStep(state.step+1)}else{state.mode='done';save();render()}
+ }
+ else if(act==='stop'||act==='finish'){state.mode='done';save();render();try{document.getElementById('done').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}}
+ else if(act==='map'){state.mode='lesson';save();render();try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){}}
+});
+document.body.addEventListener('change',e=>{if(e.target.name==='ans'){state.choice=Number(e.target.value);state.checked=false;save()}});
+render();
+})();
+</script>
+</body>
+</html>
